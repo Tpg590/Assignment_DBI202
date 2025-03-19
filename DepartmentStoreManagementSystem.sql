@@ -1,6 +1,6 @@
 Use master
 
--- ALTER DATABASE DepartmentStoreManagementSystem SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+ ALTER DATABASE DepartmentStoreManagementSystem SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 
 drop database if exists DepartmentStoreManagementSystem
 
@@ -42,7 +42,7 @@ create table Employee(
 	Email varchar(50),
 	Address nvarchar(250) NOT NULL,
 	City nvarchar(50) NOT NULL,
-	HireDate date,
+	HireDate date check (HireDate <= getdate()),
 	JobTitle nvarchar(50) NOT NULL,
 	Department nvarchar(50) NOT NULL,
 	Salary int NOT NULL
@@ -64,7 +64,7 @@ create table Category(
 
 
 
-create table Producted(
+create table Product(
 	ProductID int identity(1,1) primary key,
 	ProductName nvarchar(250) NOT NULL,
 	Description nvarchar(250) NOT NULL,
@@ -82,21 +82,21 @@ create table Producted(
 create table Inventory(
 	InventoryID int identity(1,1) primary key,
 	QuantityReceived varchar(250),
-	ReceivedDate date,
+	ReceivedDate date check (ReceivedDate <= getdate()),
 	SupplierID int references Supplier(SupplierID),
-	ProductID int references Producted(ProductID)
+	ProductID int references Product(ProductID)
 )
 
 
-Create table Ordered(
+Create table [Order](
 	OrderID int identity(1,1) primary key,
-	OrderDate date,
+	OrderDate date check (OrderDate <= getdate()),
 	ShippingAddress nvarchar(250) NOT NULL,
 	ShippingCity nvarchar(50) NOT NULL,
 	Status nvarchar(250),
 	TotalAmount int NOT NULL,
 	PaymentMethod nvarchar(250) NOT NULL,
-	PromisedDate date,
+	PromisedDate date check (PromisedDate <= getdate()),
 	ShippingFees int NOT NULL,
 	TrackingCode varchar(250) NOT NULL,
 	EmployeeID int references Employee(EmployeeID),
@@ -107,16 +107,19 @@ Create table Ordered(
 create table Contain(
 	ContainID int identity(1,1) primary key,
 	Quanlity varchar(250),
-	ProductID int references Producted(ProductID),
-	OrderID int references Ordered(OrderID)
+	ProductID int references Product(ProductID),
+	OrderID int references [Order](OrderID)
 )
 
 Create table Promotion(
 	PromotionID int identity(1,1) primary key,
 	DiscountPercentage int NOT NULL,
 	DiscountAmount int NOT NULL,
-	StartDate date,
+	StartDate date check (StartDate <= getdate()),
 	EndDate date,
 	Description nvarchar(250),
-	ProductID int  references Producted(ProductID)
+	ProductID int  references Product(ProductID)
 )
+
+ALTER TABLE Promotion
+ADD CONSTRAINT chk_EndDate CHECK (EndDate >= StartDate);
