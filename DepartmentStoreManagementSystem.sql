@@ -1,6 +1,6 @@
 Use master
 
- ALTER DATABASE DepartmentStoreManagementSystem SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+-- ALTER DATABASE DepartmentStoreManagementSystem SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 
 drop database if exists DepartmentStoreManagementSystem
 
