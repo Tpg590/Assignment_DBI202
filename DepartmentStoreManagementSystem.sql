@@ -1,6 +1,6 @@
 Use master
 
- ALTER DATABASE DepartmentStoreManagementSystem SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+-- ALTER DATABASE DepartmentStoreManagementSystem SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
 
 drop database if exists DepartmentStoreManagementSystem
 
@@ -73,18 +73,17 @@ create table Product(
 	StockQuanlity nvarchar(250) NOT NULL,
 	Unit varchar(50),
 	ImageURL TEXT NOT NULL,
-	CategoryID int,
-	SupplierID int,
-	foreign key (CategoryID) references Category(CategoryID),
-	foreign key (SupplierID) references Supplier(SupplierID)
+	CategoryID int references Category(CategoryID),
+	SupplierID int references Supplier(SupplierID)
+
 )
 
 create table Inventory(
-	InventoryID int identity(1,1) primary key,
 	QuantityReceived varchar(250),
 	ReceivedDate date check (ReceivedDate <= getdate()),
 	SupplierID int references Supplier(SupplierID),
-	ProductID int references Product(ProductID)
+	ProductID int references Product(ProductID),
+	Primary key(SupplierID, ProductID)
 )
 
 
@@ -105,10 +104,10 @@ Create table [Order](
 )
 
 create table Contain(
-	ContainID int identity(1,1) primary key,
 	Quanlity varchar(250),
 	ProductID int references Product(ProductID),
-	OrderID int references [Order](OrderID)
+	OrderID int references [Order](OrderID),
+	Primary key (ProductID, OrderID)
 )
 
 Create table Promotion(
