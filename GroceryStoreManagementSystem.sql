@@ -92,7 +92,6 @@ Create table [Order](
 	ShippingAddress nvarchar(250) NOT NULL,
 	ShippingCity nvarchar(50) NOT NULL,
 	Status nvarchar(250),
-	TotalAmount int NOT NULL,
 	PaymentMethod nvarchar(250) NOT NULL,
 	PromisedDate date,
 	ShippingFees int NOT NULL,
@@ -252,7 +251,7 @@ BEGIN
     -- Handle INSERT operations
     IF EXISTS (SELECT * FROM inserted WHERE NOT EXISTS (SELECT * FROM deleted))
     BEGIN
-        INSERT INTO [Order] (OrderDate, ShippingAddress, ShippingCity, Status, TotalAmount, PaymentMethod, PromisedDate, ShippingFees, TrackingCode, EmployeeID, CustomerID, ProviderID)
+        INSERT INTO [Order] (OrderDate, ShippingAddress, ShippingCity, Status, PaymentMethod, PromisedDate, ShippingFees, TrackingCode, EmployeeID, CustomerID, ProviderID)
         SELECT
             CASE
                 WHEN i.OrderDate > GETDATE() THEN GETDATE()
@@ -261,7 +260,6 @@ BEGIN
             ShippingAddress,
             ShippingCity,
             Status,
-            TotalAmount,
             PaymentMethod,
             PromisedDate,
             ShippingFees,
@@ -608,9 +606,9 @@ INSERT INTO Inventory (QuantityReceived, ReceivedDate, SupplierID, ProductID) VA
 (650, '2025-03-25', 3, 8); -- Unilever (as a placeholder for beverage supplier) supplied Coca-Cola
 
 -- Order
-INSERT INTO [Order] (OrderDate, ShippingAddress, ShippingCity, Status, TotalAmount, PaymentMethod, PromisedDate, ShippingFees, TrackingCode, EmployeeID, CustomerID, ProviderID) VALUES
-('2025-03-25', '123 Tran Hung Dao Street', 'Can Tho', 'Delivered', 70000, 'Cash', '2025-03-27', 15000, 'GHN12345', 1, 1, 1), -- Customer A ordered something
-('2025-03-26', '456 30 Thang 4 Street', 'Can Tho', 'Processing', 30000, 'Credit Card', '2025-03-28', 10000, 'VTP67890', 2, 2, 2); -- Customer B placed an order
+INSERT INTO [Order] (OrderDate, ShippingAddress, ShippingCity, Status, PaymentMethod, PromisedDate, ShippingFees, TrackingCode, EmployeeID, CustomerID, ProviderID) VALUES
+('2025-03-25', '123 Tran Hung Dao Street', 'Can Tho', 'Delivered', 'Cash', '2025-03-27', 15000, 'GHN12345', 1, 1, 1), -- Customer A ordered something
+('2025-03-26', '456 30 Thang 4 Street', 'Can Tho', 'Processing', 'Credit Card', '2025-03-28', 10000, 'VTP67890', 2, 2, 2); -- Customer B placed an order
 
 -- OrderItems
 INSERT INTO OrderItems (ProductID, OrderID, Quantity, Price) VALUES
